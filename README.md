@@ -12,6 +12,10 @@ This project contains editable Word student chapters, a book plan, decorative AI
 - `docs/Data_Dungeon_Chapter_2_Circular_Queue_Workshop.docx`
 - `docs/Data_Dungeon_Chapter_1_Instructor_Guide.docx`
 - `docs/Data_Dungeon_Chapter_2_Instructor_Guide.docx`
+- `docs/Data_Dungeon_Chapter_3_The_Shifting_Procession.docx`
+- `docs/Data_Dungeon_Chapter_3_Instructor_Guide.docx`
+- `starter/chapter03/` — independent linked procession workshop
+- `instructor/chapter03/` — runnable linked-list reference solution
 - `starter/chapter01/` — navigation foundation
 - `starter/chapter02/` — inventory activity with deliberate student tasks
 - `starter/chapter02_queue/` — independent circular-queue workshop
@@ -19,7 +23,7 @@ This project contains editable Word student chapters, a book plan, decorative AI
 
 ## Status
 
-Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All three activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 17 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39473271023). Word layouts have been reviewed. Publication licensing remains to be finalized.
+Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All four activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 21 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39476068125). Word layouts have been reviewed. Publication licensing remains to be finalized.
 
 The chapter format follows the supplied Python Adventure companion by Michael Penta. Textbook: https://opendatastructures.org/ods-java/
 
@@ -34,7 +38,7 @@ python3 verification/verify_starters.py
 python3 verification/verify_completion.py
 ```
 
-The starter checks preserve the deliberate two-item inventory limit and unfinished removal. Completion checks compile the reference projects, exercise the assigned routes and boundary cases, verify permitted edit scope, and compare the Word starter listings with tested source files. Queue verification includes wrapped growth and 1,000 deterministic mixed operations compared with ArrayDeque. These are maintainer checks, not a general grading suite for arbitrary student solutions.
+The starter checks preserve the deliberate two-item inventory limit and unfinished removal. Completion checks compile the reference projects, exercise the assigned routes and boundary cases, verify permitted edit scope, and compare the Word starter listings with tested source files. Queue verification includes wrapped growth and 1,000 deterministic mixed operations compared with ArrayDeque. Chapter 3 verification includes 2,000 seeded operations compared with an independent sequence model, reciprocal-link and cursor-identity checks, empty-list reuse, and an exact check that only the two permitted method bodies changed. These are maintainer checks, not a general grading suite for arbitrary student solutions.
 
 Instructor solutions are in this public repository and are visible to students. Compile each project folder separately.
 
