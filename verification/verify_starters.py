@@ -60,6 +60,16 @@ class StarterChecks(unittest.TestCase):
                 "Entrance", "0: Gallery", "1: Well",
             ])
 
+    def test_assigned_chapter1_prediction_trace(self):
+        self.assertEqual(self.play("chapter01",
+            "go 0\ngo 1\ngo 0\ngo 1\ngo 1\nlook\nquit\n"), [
+                "Gallery", "0: Entrance", "1: Archive",
+                "Archive", "0: Entrance",
+                "Entrance", "0: Gallery", "1: Well",
+                "Well", "0: Archive", "No passage there.",
+                "Well", "0: Archive",
+            ])
+
     def test_navigation_eof_and_unknown_command(self):
         self.assertEqual(self.play("chapter01", ""), [])
         self.assertEqual(self.play("chapter01", "help\n"),

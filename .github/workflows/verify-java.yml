@@ -1,15 +1,19 @@
-name: Verify Java starters
+name: Verify Java chapter packages
 
 on:
   push:
     branches: [main]
     paths:
       - 'starter/**'
+      - 'instructor/**'
+      - 'docs/**'
       - 'verification/**'
       - '.github/workflows/verify-java.yml'
   pull_request:
     paths:
       - 'starter/**'
+      - 'instructor/**'
+      - 'docs/**'
       - 'verification/**'
       - '.github/workflows/verify-java.yml'
   workflow_dispatch:
@@ -34,3 +38,5 @@ jobs:
           java-version: ${{ matrix.java }}
       - name: Compile and check both starter projects
         run: python3 verification/verify_starters.py
+      - name: Verify activity completion and Word listings
+        run: python3 verification/verify_completion.py
