@@ -17,7 +17,8 @@ class CompletionChecks(unittest.TestCase):
         cls.classes = {}
         for chapter, harness in [("chapter01", "Chapter1Completion"),
                                   ("chapter02", "InventoryCompletion"),
-                                  ("chapter02_queue", "QueueCompletion")]:
+                                  ("chapter02_queue", "QueueCompletion"),
+                                  ("chapter03", "ProcessionCompletion")]:
             output = Path(cls.temp.name) / chapter
             output.mkdir()
             sources = list((ROOT / "instructor" / chapter).glob("*.java"))
@@ -31,6 +32,12 @@ class CompletionChecks(unittest.TestCase):
             *map(str, (ROOT / "starter/chapter02_queue").glob("*.java"))],
             check=True, timeout=60)
         cls.classes["queue_starter"] = output
+        output = Path(cls.temp.name) / "procession_starter"
+        output.mkdir()
+        subprocess.run(["javac", "--release", "11", "-d", str(output),
+            *map(str, (ROOT / "starter/chapter03").glob("*.java"))],
+            check=True, timeout=60)
+        cls.classes["procession_starter"] = output
 
     def run_java(self, project, main, commands=""):
         result = subprocess.run(["java", "-cp", str(self.classes[project]), main],
@@ -48,10 +55,51 @@ class CompletionChecks(unittest.TestCase):
     def test_queue_requirements(self):
         self.assertIn("passed", self.run_java("chapter02_queue", "QueueCompletion"))
 
+    def test_procession_requirements(self):
+        self.assertIn("passed", self.run_java("chapter03", "ProcessionCompletion"))
+
+    def test_procession_starter(self):
+        output = self.run_java("procession_starter", "ProcessionGame",
+            "list\nback\nprev\nnext\ninsert healer\nresolve\nquit\n")
+        for expected in ["[scout, ogre, gate]", "[gate, ogre, scout]",
+                         "No previous encounter.", "Cannot insert.",
+                         "No encounter.", "Selected: ogre; size=3"]:
+            self.assertIn(expected, output)
+
+    def test_procession_complete_workshop(self):
+        output = self.run_java("chapter03", "ProcessionGame",
+            "next\ninsert healer\nlist\nresolve\nlist\nback\nresolve\n"
+            "first\nresolve\nresolve\nresolve\ninsert torchbearer\n"
+            "list\nback\nprev\nnext\nquit\n")
+        for expected in ["[scout, healer, ogre, gate]", "[scout, healer, gate]",
+                         "[gate, healer, scout]", "Selected: gate; size=3",
+                         "Selected: healer; size=2", "Selected: null; size=0",
+                         "No encounter.", "[torchbearer]",
+                         "No previous encounter.", "No next encounter."]:
+            self.assertIn(expected, output)
+        self.assertNotIn("Cannot insert.", output)
+
+    def test_procession_only_permitted_method_bodies_changed(self):
+        starter = (ROOT / "starter/chapter03/EncounterList.java").read_text()
+        solution = (ROOT / "instructor/chapter03/EncounterList.java").read_text()
+        def mask(text):
+            for signature in ["public boolean insertBefore(String name)",
+                              "public String removeSelected()"]:
+                start = text.index("{", text.index(signature))
+                depth, end = 1, start + 1
+                while depth:
+                    if text[end] == "{": depth += 1
+                    if text[end] == "}": depth -= 1
+                    end += 1
+                text = text[:start] + "{}" + text[end:]
+            return text
+        self.assertEqual(mask(starter), mask(solution))
+
     def test_permitted_edit_scope(self):
         for chapter, names in [("chapter01", ["Room.java", "Player.java", "Game.java"]),
                                ("chapter02", ["Item.java", "PackGame.java"]),
-                               ("chapter02_queue", ["EncounterDesk.java"])]:
+                               ("chapter02_queue", ["EncounterDesk.java"]),
+                               ("chapter03", ["ProcessionGame.java"])]:
             for name in names:
                 with self.subTest(chapter=chapter, file=name):
                     self.assertEqual((ROOT / "starter" / chapter / name).read_bytes(),
@@ -89,7 +137,8 @@ class CompletionChecks(unittest.TestCase):
         namespace = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
         pairs = [("chapter01", "Data_Dungeon_Chapter_1_At_the_Threshold.docx"),
                  ("chapter02", "Data_Dungeon_Chapter_2_The_Adventurers_Pack.docx"),
-                 ("chapter02_queue", "Data_Dungeon_Chapter_2_Circular_Queue_Workshop.docx")]
+                 ("chapter02_queue", "Data_Dungeon_Chapter_2_Circular_Queue_Workshop.docx"),
+                 ("chapter03", "Data_Dungeon_Chapter_3_The_Shifting_Procession.docx")]
         for chapter, filename in pairs:
             with zipfile.ZipFile(ROOT / "docs" / filename) as archive:
                 root = ET.fromstring(archive.read("word/document.xml"))
