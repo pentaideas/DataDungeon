@@ -20,6 +20,10 @@ This project contains editable Word student chapters, a book plan, decorative AI
 - `docs/Data_Dungeon_Chapter_4_Instructor_Guide.docx`
 - `starter/chapter04/` — optional skiplist search and insertion workshop
 - `instructor/chapter04/` — runnable ordered-directory reference solution
+- `docs/Data_Dungeon_Chapter_5_The_Keepers_Registry.docx`
+- `docs/Data_Dungeon_Chapter_5_Instructor_Guide.docx`
+- `starter/chapter05/` — chained artifact registry with lookup, registration, and removal
+- `instructor/chapter05/` — runnable solution and small edge-case checker
 - `starter/chapter01/` — navigation foundation
 - `starter/chapter02/` — inventory activity with deliberate student tasks
 - `starter/chapter02_queue/` — independent circular-queue workshop
@@ -27,7 +31,7 @@ This project contains editable Word student chapters, a book plan, decorative AI
 
 ## Status
 
-Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All five activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 25 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39528740784). Word layouts have been reviewed. Publication licensing remains to be finalized.
+Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All six activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 30 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39533167263). Word layouts have been reviewed. Publication licensing remains to be finalized.
 
 The chapter format follows the supplied Python Adventure companion by Michael Penta. Textbook: https://opendatastructures.org/ods-java/
 
@@ -42,7 +46,7 @@ python3 verification/verify_starters.py
 python3 verification/verify_completion.py
 ```
 
-The starter checks preserve the deliberate two-item inventory limit and unfinished removal. Completion checks compile the reference projects, exercise the assigned routes and boundary cases, verify permitted edit scope, and compare the Word starter listings with tested source files. Queue verification includes wrapped growth and 1,000 deterministic mixed operations compared with ArrayDeque. Chapter 3 verification includes 2,000 seeded operations compared with an independent sequence model, reciprocal-link and cursor-identity checks, empty-list reuse, and an exact check that only the two permitted method bodies changed. Chapter 4 checks include 1,000 seeded insertion attempts and queries compared with TreeMap, level membership and shared node identities, exact search-step traces, and permitted edits. Chapter 4 uses explicit heights capped at 3; it does not claim a general logarithmic performance guarantee. These are maintainer checks, not a general grading suite for arbitrary student solutions.
+The starter checks preserve the deliberate two-item inventory limit and unfinished removal. Completion checks compile the reference projects, exercise the assigned routes and boundary cases, verify permitted edit scope, and compare the Word starter listings with tested source files. Queue verification includes wrapped growth and 1,000 deterministic mixed operations compared with ArrayDeque. Chapter 3 verification includes 2,000 seeded operations compared with an independent sequence model, reciprocal-link and cursor-identity checks, empty-list reuse, and an exact check that only the two permitted method bodies changed. Chapter 4 checks include 1,000 seeded insertion attempts and queries compared with TreeMap, level membership and shared node identities, exact search-step traces, and permitted edits. Chapter 4 uses explicit heights capped at 3; it does not claim a general logarithmic performance guarantee. Chapter 5 checks include 1,500 seeded operations compared with HashMap, chain membership and survivor identity, negative hash codes, and the three-method edit boundary. The small edge checker is also run against three deliberate defects to confirm that its tests detect head-only lookup, string reference comparison, and destructive bucket removal. The Chapter 5 teaching table has five fixed buckets and does not resize. These are maintainer checks, not a general grading suite for arbitrary student solutions.
 
 Instructor solutions are in this public repository and are visible to students. Compile each project folder separately.
 
