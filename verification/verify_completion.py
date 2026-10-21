@@ -22,7 +22,9 @@ class CompletionChecks(unittest.TestCase):
                                   ("chapter04", "DirectoryCompletion"),
                                   ("chapter05", "RegistryCompletion"),
                                   ("chapter06", "ArchiveCompletion"),
-                                  ("chapter10", "TrapCompletion")]:
+                                  ("chapter10", "TrapCompletion"),
+                                  ("chapter11", "SortingCompletion"),
+                                  ("chapter12", "GraphCompletion")]:
             output = Path(cls.temp.name) / chapter
             output.mkdir()
             sources = list((ROOT / "instructor" / chapter).glob("*.java"))
@@ -68,6 +70,77 @@ class CompletionChecks(unittest.TestCase):
             str(ROOT / "instructor/chapter10/TrapChecks.java")],
             check=True, timeout=60)
         cls.classes["trap_starter"] = output
+        for chapter in ["chapter11", "chapter12"]:
+            output = Path(cls.temp.name) / (chapter + "_starter")
+            output.mkdir()
+            subprocess.run(["javac", "--release", "11", "-d", str(output),
+                *map(str, (ROOT / "starter" / chapter).glob("*.java"))],
+                check=True, timeout=60)
+            cls.classes[chapter + "_starter"] = output
+
+    def test_sorting_requirements(self):
+        self.assertIn("passed", self.run_java("chapter11", "SortingCompletion"))
+
+    def test_sorting_starter(self):
+        output = self.run_java("chapter11_starter", "CatalogueGame")
+        self.assertIn("Merge: [A:40, B:10, C:30, D:10, E:50, F:20]", output)
+        self.assertEqual(output.count("Comparisons: insertion=0, merge=0"), 5)
+
+    def test_sorting_complete_experiments(self):
+        output = self.run_java("chapter11", "CatalogueGame")
+        lines = output.splitlines()
+        self.assertEqual(len(lines), 20)
+        self.assertEqual(lines[1], "Insertion: [B:10, D:10, F:20, C:30, A:40, E:50]")
+        self.assertEqual(lines[2], "Merge: [B:10, D:10, F:20, C:30, A:40, E:50]")
+        self.assertEqual([lines[index] for index in [3, 7, 11, 15, 19]], [
+            "Comparisons: insertion=11, merge=10",
+            "Comparisons: insertion=7, merge=12",
+            "Comparisons: insertion=28, merge=12",
+            "Comparisons: insertion=7, merge=12",
+            "Comparisons: insertion=17, merge=17"])
+
+    def check_method_scope(self, chapter, filename, signatures):
+        def mask(text):
+            for signature in signatures:
+                start = text.index("{", text.index(signature))
+                depth, end = 1, start + 1
+                while depth:
+                    if text[end] == "{": depth += 1
+                    if text[end] == "}": depth -= 1
+                    end += 1
+                text = text[:start] + "{}" + text[end:]
+            return text
+        self.assertEqual(mask((ROOT / "starter" / chapter / filename).read_text()),
+                         mask((ROOT / "instructor" / chapter / filename).read_text()))
+
+    def test_sorting_only_permitted_method_bodies_changed(self):
+        self.check_method_scope("chapter11", "CatalogueSort.java",
+            ["public long insertionSort(", "private void merge("])
+
+    def test_graph_requirements(self):
+        self.assertIn("passed", self.run_java("chapter12", "GraphCompletion"))
+
+    def test_graph_starter(self):
+        output = self.run_java("chapter12_starter", "LabyrinthGame",
+            "reach\nroute 0\nroute 6\nquit\n")
+        self.assertEqual(output.splitlines()[2:], ["Reachable: 1", "Route: [0]",
+            "Passages: 0", "Route: []", "Passages: -1"])
+
+    def test_graph_complete_adventure(self):
+        output = self.run_java("chapter12", "LabyrinthGame",
+            "reach\nroute 6\nroute 4\nroute 7\nroute 0\nstart 7\nreach\n"
+            "route 7\nroute 0\nstart 2\nroute 6\nstart 99\nroute 6\nquit\n")
+        self.assertEqual(output.splitlines()[2:], [
+            "Reachable: 7", "Route: [0, 1, 3, 5, 6]", "Passages: 4",
+            "Route: [0, 2, 4]", "Passages: 2", "Route: []", "Passages: -1",
+            "Route: [0]", "Passages: 0", "Start: Sealed chamber", "Reachable: 1",
+            "Route: [7]", "Passages: 0", "Route: []", "Passages: -1",
+            "Start: Well", "Route: [2, 3, 5, 6]", "Passages: 3",
+            "Invalid start.", "Route: [2, 3, 5, 6]", "Passages: 3"])
+
+    def test_graph_only_permitted_method_body_changed(self):
+        self.check_method_scope("chapter12", "RouteFinder.java",
+            ["public SearchResult search("])
 
     def test_trap_requirements(self):
         self.assertIn("passed", self.run_java("chapter10", "TrapCompletion"))
@@ -332,7 +405,9 @@ class CompletionChecks(unittest.TestCase):
                                ("chapter04", ["DirectoryGame.java"]),
                                ("chapter05", ["RegistryGame.java"]),
                                ("chapter06", ["ArchiveGame.java"]),
-                               ("chapter10", ["TrapGame.java", "TrapEvent.java"])]:
+                               ("chapter10", ["TrapGame.java", "TrapEvent.java"]),
+                               ("chapter11", ["CatalogueGame.java", "Treasure.java"]),
+                               ("chapter12", ["LabyrinthGame.java", "MazeGraph.java"])]:
             for name in names:
                 with self.subTest(chapter=chapter, file=name):
                     self.assertEqual((ROOT / "starter" / chapter / name).read_bytes(),
@@ -375,7 +450,9 @@ class CompletionChecks(unittest.TestCase):
                  ("chapter04", "Data_Dungeon_Chapter_4_The_Ordered_Directory.docx"),
                  ("chapter05", "Data_Dungeon_Chapter_5_The_Keepers_Registry.docx"),
                  ("chapter06", "Data_Dungeon_Chapter_6_The_Archive_of_Doors.docx"),
-                 ("chapter10", "Data_Dungeon_Chapter_10_The_Awakening_Traps.docx")]
+                 ("chapter10", "Data_Dungeon_Chapter_10_The_Awakening_Traps.docx"),
+                 ("chapter11", "Data_Dungeon_Chapter_11_The_Treasure_Catalogue.docx"),
+                 ("chapter12", "Data_Dungeon_Chapter_12_The_Labyrinth_Revealed.docx")]
         for chapter, filename in pairs:
             with zipfile.ZipFile(ROOT / "docs" / filename) as archive:
                 root = ET.fromstring(archive.read("word/document.xml"))
