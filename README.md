@@ -49,11 +49,11 @@ This project contains editable Word student chapters, a book plan, decorative AI
 
 The agreed chapter set is complete: Chapters 1–6 and 10–12, plus the Chapter 2 circular-queue workshop. Chapters 7–9 and 13–14 are outside this release; no further chapters are currently planned. This scope supersedes the earlier book plan.
 
-Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All ten activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 47 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39686980346). Word layouts have been reviewed. Publication licensing remains to be finalized.
+Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All ten activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 47 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39686980346). Word layouts have been reviewed. Original contributions are dedicated under CC0 1.0; third-party material retains its applicable terms.
 
 The chapter format follows the supplied Python Adventure companion by Michael Penta. Textbook: https://opendatastructures.org/ods-java/
 
-ChatGPT assisted with drafting, instructional design, and code. Decorative artwork was created with OpenAI image generation. Human review is required before classroom release.
+This work was AI-created, human-prompted, human-edited, and human-verified. Text, instructional activities, and code were generated using ChatGPT (OpenAI). Decorative artwork was generated using OpenAI image generation. Classroom review remains appropriate.
 
 ## Verification
 
@@ -71,3 +71,11 @@ Instructor solutions are in this public repository and are visible to students. 
 ## Completion standard for each chapter
 
 Before advancing a chapter, include the student Word assignment, complete starter project, instructor Word guide, runnable reference solution, expected traces, assessment criteria, and teaching notes. Demonstrate each required feature using only permitted changes; test boundary behavior and verify that the Word listings match the Java sources. AI tasks must specify a purpose, permitted assistance, a concrete verification method, and an equivalent access alternative. Student timing and live AI interactions still require classroom observation.
+
+## Publication license and AI disclosure
+
+Original contributions are dedicated under [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/). You may copy, edit, redistribute, and use them commercially, without an attribution requirement for those contributions. See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md) for scope and source attribution.
+
+Pat Morin’s *Open Data Structures* and its source code retain [CC BY 2.5 Canada](https://creativecommons.org/licenses/by/2.5/ca/). Their attribution requirement is not waived by this project’s CC0 dedication.
+
+AI tool citation: OpenAI. (2026). *ChatGPT* [large language model]. https://chatgpt.com/. Exact model-version identifiers were not recorded. Human verification does not imply error-free materials or completed classroom trials.
