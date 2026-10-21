@@ -21,7 +21,8 @@ class CompletionChecks(unittest.TestCase):
                                   ("chapter03", "ProcessionCompletion"),
                                   ("chapter04", "DirectoryCompletion"),
                                   ("chapter05", "RegistryCompletion"),
-                                  ("chapter06", "ArchiveCompletion")]:
+                                  ("chapter06", "ArchiveCompletion"),
+                                  ("chapter10", "TrapCompletion")]:
             output = Path(cls.temp.name) / chapter
             output.mkdir()
             sources = list((ROOT / "instructor" / chapter).glob("*.java"))
@@ -60,6 +61,63 @@ class CompletionChecks(unittest.TestCase):
             str(ROOT / "instructor/chapter06/ArchiveDiagnosis.java")],
             check=True, timeout=60)
         cls.classes["archive_starter"] = output
+        output = Path(cls.temp.name) / "trap_starter"
+        output.mkdir()
+        subprocess.run(["javac", "--release", "11", "-d", str(output),
+            *map(str, (ROOT / "starter/chapter10").glob("*.java")),
+            str(ROOT / "instructor/chapter10/TrapChecks.java")],
+            check=True, timeout=60)
+        cls.classes["trap_starter"] = output
+
+    def test_trap_requirements(self):
+        self.assertIn("passed", self.run_java("chapter10", "TrapCompletion"))
+        self.assertIn("passed", self.run_java("chapter10", "TrapChecks"))
+
+    def test_trap_starter(self):
+        output = self.run_java("trap_starter", "TrapGame", "peek\nstate\nquit\n")
+        self.assertIn("Next: 8:seal", output)
+        self.assertIn("[8:seal, 2:pressure_plate, 6:gate_opens, 4:bell]", output)
+        result = subprocess.run(["java", "-cp", str(self.classes["trap_starter"]),
+            "TrapChecks"], capture_output=True, text=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("earliest time", result.stderr)
+
+    def test_trap_complete_workshop(self):
+        output = self.run_java("chapter10", "TrapGame",
+            "peek\nnext\nstate\nschedule 1 late\npeek\n" + "next\n" * 6 +
+            "state\nschedule 8 lantern\nnext\nquit\n")
+        self.assertEqual(output.splitlines()[2:], [
+            "Next: 2:pressure_plate", "Time 2: pressure_plate",
+            "Scheduled: 3:darts", "Scheduled: 6:echo",
+            "[3:darts, 4:bell, 6:gate_opens, 8:seal, 6:echo]",
+            "Clock: 2; size: 5; capacity: 8", "Cannot schedule.",
+            "Next: 3:darts", "Time 3: darts", "Time 4: bell",
+            "Time 6: gate_opens", "Time 6: echo", "Time 8: seal", "No events.",
+            "[]", "Clock: 8; size: 0; capacity: 8", "Scheduled.",
+            "Time 8: lantern"])
+
+    def test_trap_clock_boundaries(self):
+        output = self.run_java("chapter10", "TrapGame",
+            "next\n" * 6 + "schedule 2147483647 pressure_plate\nnext\n"
+            "schedule 2147483646 past\nschedule nope bad\nnext\nquit\n")
+        self.assertIn("Time 2147483647: pressure_plate\n"
+            "Cannot schedule follow-up: darts\nCannot schedule follow-up: echo", output)
+        self.assertIn("Cannot schedule.\nUse an integer time.\nNo events.", output)
+
+    def test_trap_only_permitted_method_bodies_changed(self):
+        def mask(text):
+            for signature in ["private void bubbleUp(int index)",
+                              "private void trickleDown(int index)"]:
+                start = text.index("{", text.index(signature))
+                depth, end = 1, start + 1
+                while depth:
+                    if text[end] == "{": depth += 1
+                    if text[end] == "}": depth -= 1
+                    end += 1
+                text = text[:start] + "{}" + text[end:]
+            return text
+        self.assertEqual(mask((ROOT / "starter/chapter10/TrapQueue.java").read_text()),
+                         mask((ROOT / "instructor/chapter10/TrapQueue.java").read_text()))
 
     def test_archive_requirements(self):
         self.assertIn("passed", self.run_java("chapter06", "ArchiveCompletion"))
@@ -273,7 +331,8 @@ class CompletionChecks(unittest.TestCase):
                                ("chapter03", ["ProcessionGame.java"]),
                                ("chapter04", ["DirectoryGame.java"]),
                                ("chapter05", ["RegistryGame.java"]),
-                               ("chapter06", ["ArchiveGame.java"])]:
+                               ("chapter06", ["ArchiveGame.java"]),
+                               ("chapter10", ["TrapGame.java", "TrapEvent.java"])]:
             for name in names:
                 with self.subTest(chapter=chapter, file=name):
                     self.assertEqual((ROOT / "starter" / chapter / name).read_bytes(),
@@ -315,7 +374,8 @@ class CompletionChecks(unittest.TestCase):
                  ("chapter03", "Data_Dungeon_Chapter_3_The_Shifting_Procession.docx"),
                  ("chapter04", "Data_Dungeon_Chapter_4_The_Ordered_Directory.docx"),
                  ("chapter05", "Data_Dungeon_Chapter_5_The_Keepers_Registry.docx"),
-                 ("chapter06", "Data_Dungeon_Chapter_6_The_Archive_of_Doors.docx")]
+                 ("chapter06", "Data_Dungeon_Chapter_6_The_Archive_of_Doors.docx"),
+                 ("chapter10", "Data_Dungeon_Chapter_10_The_Awakening_Traps.docx")]
         for chapter, filename in pairs:
             with zipfile.ZipFile(ROOT / "docs" / filename) as archive:
                 root = ET.fromstring(archive.read("word/document.xml"))
