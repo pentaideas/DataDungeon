@@ -19,7 +19,8 @@ class CompletionChecks(unittest.TestCase):
                                   ("chapter02", "InventoryCompletion"),
                                   ("chapter02_queue", "QueueCompletion"),
                                   ("chapter03", "ProcessionCompletion"),
-                                  ("chapter04", "DirectoryCompletion")]:
+                                  ("chapter04", "DirectoryCompletion"),
+                                  ("chapter05", "RegistryCompletion")]:
             output = Path(cls.temp.name) / chapter
             output.mkdir()
             sources = list((ROOT / "instructor" / chapter).glob("*.java"))
@@ -45,6 +46,12 @@ class CompletionChecks(unittest.TestCase):
             *map(str, (ROOT / "starter/chapter04").glob("*.java"))],
             check=True, timeout=60)
         cls.classes["directory_starter"] = output
+        output = Path(cls.temp.name) / "registry_starter"
+        output.mkdir()
+        subprocess.run(["javac", "--release", "11", "-d", str(output),
+            *map(str, (ROOT / "starter/chapter05").glob("*.java"))],
+            check=True, timeout=60)
+        cls.classes["registry_starter"] = output
 
     def run_java(self, project, main, commands=""):
         result = subprocess.run(["java", "-cp", str(self.classes[project]), main],
@@ -67,6 +74,74 @@ class CompletionChecks(unittest.TestCase):
 
     def test_directory_requirements(self):
         self.assertIn("passed", self.run_java("chapter04", "DirectoryCompletion"))
+
+    def test_registry_requirements(self):
+        self.assertIn("passed", self.run_java("chapter05", "RegistryCompletion"))
+
+    def test_registry_starter(self):
+        output = self.run_java("registry_starter", "RegistryGame",
+            "find C\nfind Aa\nclaim BB\nregister D gate\nbuckets\nquit\n")
+        for expected in ["Location: archive", "Not registered.",
+                         "Cannot register.", "Size: 3",
+                         "2: C=archive BB=forge Aa=well"]:
+            self.assertIn(expected, output)
+
+    def test_registry_complete_workshop(self):
+        output = self.run_java("chapter05", "RegistryGame",
+            "find BB\nclaim BB\nbuckets\nfind Aa\nregister Aa gate\n"
+            "register BB sanctuary\nbuckets\nclaim BB\nclaim Aa\n"
+            "claim C\nclaim C\nbuckets\nregister C gate\nfind C\nquit\n")
+        for expected in ["Location: forge", "Claimed from: forge",
+                         "2: C=archive Aa=well", "Location: well",
+                         "Cannot register.", "2: BB=sanctuary C=archive Aa=well",
+                         "Claimed from: sanctuary", "Claimed from: well",
+                         "Claimed from: archive", "Size: 0", "Location: gate"]:
+            self.assertIn(expected, output)
+
+    def test_registry_only_permitted_method_bodies_changed(self):
+        def mask(text):
+            for signature in ["public String get(String id)",
+                              "public boolean register(String id, String room)",
+                              "public String remove(String id)"]:
+                start = text.index("{", text.index(signature))
+                depth, end = 1, start + 1
+                while depth:
+                    if text[end] == "{": depth += 1
+                    if text[end] == "}": depth -= 1
+                    end += 1
+                text = text[:start] + "{}" + text[end:]
+            return text
+        self.assertEqual(mask((ROOT / "starter/chapter05/ArtifactRegistry.java").read_text()),
+                         mask((ROOT / "instructor/chapter05/ArtifactRegistry.java").read_text()))
+
+    def test_registry_edge_checks_detect_targeted_bugs(self):
+        self.assertIn("passed", self.run_java("chapter05", "RegistryEdgeChecks"))
+        correct = (ROOT / "instructor/chapter05/ArtifactRegistry.java").read_text()
+        starter = (ROOT / "starter/chapter05/ArtifactRegistry.java").read_text()
+        begin = correct.index("    public String get(")
+        end = correct.index("    public boolean register(")
+        starter_get = starter[starter.index("    public String get("):
+                              starter.index("    public boolean register(")]
+        mutants = {
+            "head_only": (correct[:begin] + starter_get + correct[end:], "tail lookup"),
+            "identity": (correct.replace("node.id.equals(id)", "node.id == id"),
+                         "equal text in different objects"),
+            "clear_bucket": (correct.replace("else previous.next = current.next;",
+                                             "else buckets[index] = null;"),
+                             "survivors after removal"),
+        }
+        for label, (source, message) in mutants.items():
+            output = Path(self.temp.name) / label
+            output.mkdir()
+            java = output / "ArtifactRegistry.java"
+            java.write_text(source)
+            subprocess.run(["javac", "--release", "11", "-d", str(output), str(java),
+                str(ROOT / "instructor/chapter05/RegistryEdgeChecks.java")],
+                check=True, timeout=60)
+            result = subprocess.run(["java", "-cp", str(output), "RegistryEdgeChecks"],
+                capture_output=True, text=True, timeout=30)
+            self.assertNotEqual(result.returncode, 0, label)
+            self.assertIn(message, result.stderr, label)
 
     def test_directory_starter(self):
         output = self.run_java("directory_starter", "DirectoryGame",
@@ -143,7 +218,8 @@ class CompletionChecks(unittest.TestCase):
                                ("chapter02", ["Item.java", "PackGame.java"]),
                                ("chapter02_queue", ["EncounterDesk.java"]),
                                ("chapter03", ["ProcessionGame.java"]),
-                               ("chapter04", ["DirectoryGame.java"])]:
+                               ("chapter04", ["DirectoryGame.java"]),
+                               ("chapter05", ["RegistryGame.java"])]:
             for name in names:
                 with self.subTest(chapter=chapter, file=name):
                     self.assertEqual((ROOT / "starter" / chapter / name).read_bytes(),
@@ -183,7 +259,8 @@ class CompletionChecks(unittest.TestCase):
                  ("chapter02", "Data_Dungeon_Chapter_2_The_Adventurers_Pack.docx"),
                  ("chapter02_queue", "Data_Dungeon_Chapter_2_Circular_Queue_Workshop.docx"),
                  ("chapter03", "Data_Dungeon_Chapter_3_The_Shifting_Procession.docx"),
-                 ("chapter04", "Data_Dungeon_Chapter_4_The_Ordered_Directory.docx")]
+                 ("chapter04", "Data_Dungeon_Chapter_4_The_Ordered_Directory.docx"),
+                 ("chapter05", "Data_Dungeon_Chapter_5_The_Keepers_Registry.docx")]
         for chapter, filename in pairs:
             with zipfile.ZipFile(ROOT / "docs" / filename) as archive:
                 root = ET.fromstring(archive.read("word/document.xml"))
