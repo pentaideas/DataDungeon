@@ -18,7 +18,8 @@ class CompletionChecks(unittest.TestCase):
         for chapter, harness in [("chapter01", "Chapter1Completion"),
                                   ("chapter02", "InventoryCompletion"),
                                   ("chapter02_queue", "QueueCompletion"),
-                                  ("chapter03", "ProcessionCompletion")]:
+                                  ("chapter03", "ProcessionCompletion"),
+                                  ("chapter04", "DirectoryCompletion")]:
             output = Path(cls.temp.name) / chapter
             output.mkdir()
             sources = list((ROOT / "instructor" / chapter).glob("*.java"))
@@ -38,6 +39,12 @@ class CompletionChecks(unittest.TestCase):
             *map(str, (ROOT / "starter/chapter03").glob("*.java"))],
             check=True, timeout=60)
         cls.classes["procession_starter"] = output
+        output = Path(cls.temp.name) / "directory_starter"
+        output.mkdir()
+        subprocess.run(["javac", "--release", "11", "-d", str(output),
+            *map(str, (ROOT / "starter/chapter04").glob("*.java"))],
+            check=True, timeout=60)
+        cls.classes["directory_starter"] = output
 
     def run_java(self, project, main, commands=""):
         result = subprocess.run(["java", "-cp", str(self.classes[project]), main],
@@ -57,6 +64,42 @@ class CompletionChecks(unittest.TestCase):
 
     def test_procession_requirements(self):
         self.assertIn("passed", self.run_java("chapter03", "ProcessionCompletion"))
+
+    def test_directory_requirements(self):
+        self.assertIn("passed", self.run_java("chapter04", "DirectoryCompletion"))
+
+    def test_directory_starter(self):
+        output = self.run_java("directory_starter", "DirectoryGame",
+            "ceiling 35\nexact 35\nadd 35 2 sanctuary\nlevels\nquit\n")
+        for expected in ["40:archive", "Horizontal steps: 3", "No room.",
+                         "Cannot add.", "Size: 6"]:
+            self.assertIn(expected, output)
+
+    def test_directory_complete_workshop(self):
+        output = self.run_java("chapter04", "DirectoryGame",
+            "ceiling 35\nexact 35\nadd 35 2 sanctuary\nceiling 31\n"
+            "exact 35\nadd 35 3 replacement\nlevels\nceiling 61\n"
+            "exact nope\nquit\n")
+        for expected in ["40:archive", "Horizontal steps: 2", "Added.",
+                         "35:sanctuary", "Cannot add.", "Size: 7",
+                         "L2: 20 35 40", "No room.",
+                         "Use integer numbers and heights."]:
+            self.assertIn(expected, output)
+
+    def test_directory_only_permitted_method_bodies_changed(self):
+        def mask(text):
+            for signature in ["private Node findBefore(int target)",
+                              "public boolean add(int number, String name, int height)"]:
+                start = text.index("{", text.index(signature))
+                depth, end = 1, start + 1
+                while depth:
+                    if text[end] == "{": depth += 1
+                    if text[end] == "}": depth -= 1
+                    end += 1
+                text = text[:start] + "{}" + text[end:]
+            return text
+        self.assertEqual(mask((ROOT / "starter/chapter04/RoomDirectory.java").read_text()),
+                         mask((ROOT / "instructor/chapter04/RoomDirectory.java").read_text()))
 
     def test_procession_starter(self):
         output = self.run_java("procession_starter", "ProcessionGame",
@@ -99,7 +142,8 @@ class CompletionChecks(unittest.TestCase):
         for chapter, names in [("chapter01", ["Room.java", "Player.java", "Game.java"]),
                                ("chapter02", ["Item.java", "PackGame.java"]),
                                ("chapter02_queue", ["EncounterDesk.java"]),
-                               ("chapter03", ["ProcessionGame.java"])]:
+                               ("chapter03", ["ProcessionGame.java"]),
+                               ("chapter04", ["DirectoryGame.java"])]:
             for name in names:
                 with self.subTest(chapter=chapter, file=name):
                     self.assertEqual((ROOT / "starter" / chapter / name).read_bytes(),
@@ -138,7 +182,8 @@ class CompletionChecks(unittest.TestCase):
         pairs = [("chapter01", "Data_Dungeon_Chapter_1_At_the_Threshold.docx"),
                  ("chapter02", "Data_Dungeon_Chapter_2_The_Adventurers_Pack.docx"),
                  ("chapter02_queue", "Data_Dungeon_Chapter_2_Circular_Queue_Workshop.docx"),
-                 ("chapter03", "Data_Dungeon_Chapter_3_The_Shifting_Procession.docx")]
+                 ("chapter03", "Data_Dungeon_Chapter_3_The_Shifting_Procession.docx"),
+                 ("chapter04", "Data_Dungeon_Chapter_4_The_Ordered_Directory.docx")]
         for chapter, filename in pairs:
             with zipfile.ZipFile(ROOT / "docs" / filename) as archive:
                 root = ET.fromstring(archive.read("word/document.xml"))
