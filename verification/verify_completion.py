@@ -20,7 +20,8 @@ class CompletionChecks(unittest.TestCase):
                                   ("chapter02_queue", "QueueCompletion"),
                                   ("chapter03", "ProcessionCompletion"),
                                   ("chapter04", "DirectoryCompletion"),
-                                  ("chapter05", "RegistryCompletion")]:
+                                  ("chapter05", "RegistryCompletion"),
+                                  ("chapter06", "ArchiveCompletion")]:
             output = Path(cls.temp.name) / chapter
             output.mkdir()
             sources = list((ROOT / "instructor" / chapter).glob("*.java"))
@@ -52,6 +53,58 @@ class CompletionChecks(unittest.TestCase):
             *map(str, (ROOT / "starter/chapter05").glob("*.java"))],
             check=True, timeout=60)
         cls.classes["registry_starter"] = output
+        output = Path(cls.temp.name) / "archive_starter"
+        output.mkdir()
+        subprocess.run(["javac", "--release", "11", "-d", str(output),
+            *map(str, (ROOT / "starter/chapter06").glob("*.java")),
+            str(ROOT / "instructor/chapter06/ArchiveDiagnosis.java")],
+            check=True, timeout=60)
+        cls.classes["archive_starter"] = output
+
+    def test_archive_requirements(self):
+        self.assertIn("passed", self.run_java("chapter06", "ArchiveCompletion"))
+
+    def test_archive_starter_and_diagnosis(self):
+        output = self.run_java("archive_starter", "ArchiveGame",
+            "find 40\nfind 20\nadd 25 sanctuary\nstats\nquit\n")
+        self.assertIn("Destination: archive\nNo door.\nCannot add.\n"
+                      "Size: 7; height: 2", output)
+        result = subprocess.run(["java", "-cp",
+            str(self.classes["archive_starter"]), "ArchiveDiagnosis"],
+            capture_output=True, text=True, timeout=30)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("left child lookup", result.stderr)
+        self.assertIn("passed", self.run_java("chapter06", "ArchiveDiagnosis"))
+
+    def test_archive_complete_workshop(self):
+        output = self.run_java("chapter06", "ArchiveGame",
+            "find 30\nfind 25\nadd 25 sanctuary\nfind 25\n"
+            "add 25 replacement\nfind 25\nlist\nstats\n"
+            "clear\nstats\nadd 10 gate\nadd 20 well\nadd 30 gallery\n"
+            "add 40 archive\nadd 50 vault\nadd 60 forge\n"
+            "add 70 observatory\nlist\nstats\nfind 70\nfind nope\nquit\n")
+        self.assertEqual(output.splitlines()[2:], [
+            "Destination: gallery", "No door.", "Added.",
+            "Destination: sanctuary", "Cannot add.", "Destination: sanctuary",
+            "Doors: 10 20 25 30 40 50 60 70", "Size: 8; height: 3",
+            "Archive cleared.", "Size: 0; height: -1", *(["Added."] * 7),
+            "Doors: 10 20 30 40 50 60 70", "Size: 7; height: 6",
+            "Destination: observatory", "Use an integer door number."])
+
+    def test_archive_only_permitted_method_bodies_changed(self):
+        def mask(text):
+            for signature in ["public String get(int number)",
+                              "public boolean add(int number, String room)"]:
+                start = text.index("{", text.index(signature))
+                depth, end = 1, start + 1
+                while depth:
+                    if text[end] == "{": depth += 1
+                    if text[end] == "}": depth -= 1
+                    end += 1
+                text = text[:start] + "{}" + text[end:]
+            return text
+        self.assertEqual(mask((ROOT / "starter/chapter06/DoorArchive.java").read_text()),
+                         mask((ROOT / "instructor/chapter06/DoorArchive.java").read_text()))
 
     def run_java(self, project, main, commands=""):
         result = subprocess.run(["java", "-cp", str(self.classes[project]), main],
@@ -219,7 +272,8 @@ class CompletionChecks(unittest.TestCase):
                                ("chapter02_queue", ["EncounterDesk.java"]),
                                ("chapter03", ["ProcessionGame.java"]),
                                ("chapter04", ["DirectoryGame.java"]),
-                               ("chapter05", ["RegistryGame.java"])]:
+                               ("chapter05", ["RegistryGame.java"]),
+                               ("chapter06", ["ArchiveGame.java"])]:
             for name in names:
                 with self.subTest(chapter=chapter, file=name):
                     self.assertEqual((ROOT / "starter" / chapter / name).read_bytes(),
@@ -260,7 +314,8 @@ class CompletionChecks(unittest.TestCase):
                  ("chapter02_queue", "Data_Dungeon_Chapter_2_Circular_Queue_Workshop.docx"),
                  ("chapter03", "Data_Dungeon_Chapter_3_The_Shifting_Procession.docx"),
                  ("chapter04", "Data_Dungeon_Chapter_4_The_Ordered_Directory.docx"),
-                 ("chapter05", "Data_Dungeon_Chapter_5_The_Keepers_Registry.docx")]
+                 ("chapter05", "Data_Dungeon_Chapter_5_The_Keepers_Registry.docx"),
+                 ("chapter06", "Data_Dungeon_Chapter_6_The_Archive_of_Doors.docx")]
         for chapter, filename in pairs:
             with zipfile.ZipFile(ROOT / "docs" / filename) as archive:
                 root = ET.fromstring(archive.read("word/document.xml"))
