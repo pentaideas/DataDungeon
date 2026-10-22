@@ -62,7 +62,7 @@ Use [GitHub Issues](https://github.com/pentaideas/DataDungeon/issues) to report 
 
 ## Release decision
 
-Keep this as an instructor-review draft until the release-critical rows have documented closure and the revised branch's Java 11/21 CI passes. A classroom pilot can follow a clearly labeled public review release; do not describe unpiloted material as classroom-validated. No new chapters are part of this checklist.
+The revised package's Java 11/21 CI has passed. Keep this as an instructor-review draft until the release-critical human-review rows have documented closure. A classroom pilot can follow a clearly labeled public review release; do not describe unpiloted material as classroom-validated. No new chapters are part of this checklist.
 
 ## GitHub integration verification
 
@@ -70,7 +70,7 @@ On 22 October 2026, the uploaded publication-review package was imported into `m
 
 The follow-up review confirmed that stripping only the exact shared attribution header restores all 55 Java files byte-for-byte to their previously tested versions. All nine non-compilation consistency checks passed again, including allowed edit boundaries and Word/source correspondence. Fixed submission requirements and numeric grading allocations remain absent. All 20 documents rendered successfully to 162 pages; page overviews and selected revised pages were inspected.
 
-The exact imported revision's [Java 11 and Java 21 workflow](https://github.com/pentaideas/DataDungeon/actions/runs/39815292642) was queued at the time this record was written. This record does not claim a passing result for that run. The earlier 47-test baseline remains the last confirmed full Java run until the linked workflow completes. This automated review is not human release sign-off.
+The exact imported revision's [Java 11 and Java 21 workflow](https://github.com/pentaideas/DataDungeon/actions/runs/39815292642) completed successfully on 22 October 2026. Both job logs confirm nine starter checks and 38 completion checks passed: 47 tests per Java version. A repeat comparison of the uploaded ZIP with `main` confirmed that all 108 files other than README.md and this review record still match exactly; those two files contain the subsequent integration and verification updates. This automated review is not human release sign-off.
 
 ## Licensing sources
 

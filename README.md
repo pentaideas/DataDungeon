@@ -12,7 +12,7 @@ Each activity is independent. Starter limitations and defects are intentional; f
 
 See [PUBLICATION_REVIEW.md](PUBLICATION_REVIEW.md) for review findings and the remaining human checks.
 
-The uploaded publication-review revision is now on `main`. Its [Java 11/21 verification run](https://github.com/pentaideas/DataDungeon/actions/runs/39815292642) was queued when the integration record was written; the verified run in Status below is the prior baseline. See the workflow for the current result.
+The uploaded publication-review revision is now on `main`. Its [Java 11/21 verification run](https://github.com/pentaideas/DataDungeon/actions/runs/39815292642) passed all 47 tests on each Java version (nine starter checks and 38 completion checks).
 
 ## Materials
 
@@ -59,7 +59,7 @@ The uploaded publication-review revision is now on `main`. Its [Java 11/21 verif
 
 The agreed chapter set is complete: Chapters 1–6 and 10–12, plus the Chapter 2 circular-queue workshop. Chapters 7–9 and 13–14 are outside this release; no additional chapters are planned. The book plan records this same complete scope.
 
-Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All ten activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 47 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39759338000). Word layouts have been reviewed. Original contributions are dedicated under CC0 1.0; third-party material retains its applicable terms.
+Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All ten activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 47 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39815292642). Word layouts have been reviewed. Original contributions are dedicated under CC0 1.0; third-party material retains its applicable terms.
 
 The chapter format follows the supplied Python Adventure companion by Michael Penta. Textbook: https://opendatastructures.org/ods-java/
 
