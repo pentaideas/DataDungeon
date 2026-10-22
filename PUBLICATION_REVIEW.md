@@ -10,7 +10,7 @@ Reviewed the 20 Word files (10 student activities, nine instructor guides, and t
 
 - Compared explanations, contracts, expected traces, complexity claims, and teaching adaptations with the code and the relevant portions of Pat Morin's Java edition 0.1G. See [SOURCES.md](SOURCES.md) for exact readings and differences.
 - Confirmed the baseline GitHub Actions run [39759338000](https://github.com/pentaideas/DataDungeon/actions/runs/39759338000): all 47 tests passed on Java 11 and Java 21 (nine starter checks and 38 completion checks per Java version).
-- Reran the nine non-compilation completion checks after editing: permitted method boundaries, protected files, and Word/source correspondence passed. Java executable statements were not changed. The local review environment lacked `javac`; a GitHub Actions run after upload is the gate for the edited revision. The original review was delivered as a ZIP. Its subsequent GitHub import and verification are recorded below.
+- Reran the nine non-compilation completion checks after editing: permitted method boundaries, protected files, and Word/source correspondence passed. Java executable statements were not changed. The local review environment lacked `javac`; the pull request GitHub Actions run is the gate for the edited revision. The reviewed changes are submitted on a separate publication-readiness branch; human sign-off remains outstanding.
 - Rendered all 20 revised Word files, totaling 162 pages. Reviewed page contact sheets and inspected selected changed pages at full resolution; no obvious clipping or overlap was found. This is not a page-by-page Microsoft Word compatibility certification.
 - The structural document accessibility audit reported no high, medium, or low findings across the 20 files. It checks document structure, not actual screen-reader usability or conformance of future exports.
 - Confirmed the linked Morin readings and license sources. This was not an exhaustive external-link crawl or a reconstruction of the original AI generation history.
@@ -62,15 +62,7 @@ Use [GitHub Issues](https://github.com/pentaideas/DataDungeon/issues) to report 
 
 ## Release decision
 
-The revised package's Java 11/21 CI has passed. Keep this as an instructor-review draft until the release-critical human-review rows have documented closure. A classroom pilot can follow a clearly labeled public review release; do not describe unpiloted material as classroom-validated. No new chapters are part of this checklist.
-
-## GitHub integration verification
-
-On 22 October 2026, the uploaded publication-review package was imported into `main` as commit `289683bc80ff4ee82412e53d98aab559d6197dba`. Every package file was verified against the resulting Git tree. The import changes 82 files, including the 20 Word documents and portable notices on 55 Java files.
-
-The follow-up review confirmed that stripping only the exact shared attribution header restores all 55 Java files byte-for-byte to their previously tested versions. All nine non-compilation consistency checks passed again, including allowed edit boundaries and Word/source correspondence. Fixed submission requirements and numeric grading allocations remain absent. All 20 documents rendered successfully to 162 pages; page overviews and selected revised pages were inspected.
-
-The exact imported revision's [Java 11 and Java 21 workflow](https://github.com/pentaideas/DataDungeon/actions/runs/39815292642) completed successfully on 22 October 2026. Both job logs confirm nine starter checks and 38 completion checks passed: 47 tests per Java version. A repeat comparison of the uploaded ZIP with `main` confirmed that all 108 files other than README.md and this review record still match exactly; those two files contain the subsequent integration and verification updates. This automated review is not human release sign-off.
+Keep this as an instructor-review draft until the release-critical rows have documented closure and the revised branch's Java 11/21 CI passes. A classroom pilot can follow a clearly labeled public review release; do not describe unpiloted material as classroom-validated. No new chapters are part of this checklist.
 
 ## Licensing sources
 
