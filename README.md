@@ -12,6 +12,8 @@ Each activity is independent. Starter limitations and defects are intentional; f
 
 See [PUBLICATION_REVIEW.md](PUBLICATION_REVIEW.md) for review findings and the remaining human checks.
 
+The uploaded publication-review revision is now on `main`. Its [Java 11/21 verification run](https://github.com/pentaideas/DataDungeon/actions/runs/39815292642) was queued when the integration record was written; the verified run in Status below is the prior baseline. See the workflow for the current result.
+
 ## Materials
 
 - `docs/Data_Dungeon_Book_Plan.docx`
