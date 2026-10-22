@@ -79,3 +79,7 @@ Original contributions are dedicated under [CC0 1.0 Universal](https://creativec
 Pat Morin’s *Open Data Structures* and its source code retain [CC BY 2.5 Canada](https://creativecommons.org/licenses/by/2.5/ca/). Their attribution requirement is not waived by this project’s CC0 dedication.
 
 AI tool citation: OpenAI. (2026). *ChatGPT* [large language model]. https://chatgpt.com/. Exact model-version identifiers were not recorded. Human verification does not imply error-free materials or completed classroom trials.
+
+## Adapting these materials
+
+The chapters provide learning activities, implementation constraints, tests, and reflection questions without fixed submission requirements or grading values. Instructor guides retain qualitative criteria for feedback. Instructors may choose their own assessment methods, submission formats, and grading policies; independent learners can use the same activities for self-study.
