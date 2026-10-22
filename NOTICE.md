@@ -27,3 +27,9 @@ This work was AI-created, human-prompted, human-edited, and human-verified. Text
 AI tool citation: OpenAI. (2026). *ChatGPT* [large language model]. https://chatgpt.com/. Exact model-version identifiers were not recorded.
 
 Human prompting, editing, and verification do not imply that the work is error-free or that classroom trials have been completed. The Java completion checks and their results are documented in the README.
+
+## Chapter sources and redistribution
+
+[SOURCES.md](SOURCES.md) identifies the relevant Morin sections, the affected activity folders and documents, and the changes made for each workshop. The Java files carry a portable source notice so their credits are not lost when downloaded individually. Word documents carry the corresponding attribution and license link.
+
+When redistributing reproduced or adapted Morin material, retain his name, the title *Open Data Structures*, the source URI, the CC BY 2.5 Canada license URI, and the adaptation credit. Keep upstream copyright, license, and warranty-disclaimer notices intact. CC0 for project-owned contributions does not offer an alternative license for Morin's material. The license's collective-work provisions do not require independent original contributions to use the same license. See the [CC BY 2.5 Canada legal code, sections 4(a)–(b)](https://creativecommons.org/licenses/by/2.5/ca/legalcode.en).

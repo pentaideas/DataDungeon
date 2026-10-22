@@ -469,7 +469,13 @@ class CompletionChecks(unittest.TestCase):
                         code.append(text)
             combined = "\n".join(code)
             for source in (ROOT / "starter" / chapter).glob("*.java"):
-                self.assertIn(source.read_text().strip(), combined,
+                source_text = source.read_text()
+                notice = (ROOT / "verification/source_notice.txt").read_text()
+                self.assertTrue(source_text.startswith(notice),
+                                f"Missing source attribution: {source}")
+                self.assertIn("https://creativecommons.org/licenses/by/2.5/ca/",
+                              "".join(root.itertext()))
+                self.assertIn(source_text[len(notice):].strip(), combined,
                               f"Word listing differs: {chapter}/{source.name}")
 
 
