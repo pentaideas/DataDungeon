@@ -1,0 +1,33 @@
+name: Check documentation links
+
+on:
+  push:
+    branches: [main]
+    paths: ['**/*.md', '**/*.docx', 'verification/check_links.py', 'verification/test_check_links.py', '.github/workflows/check-links.yml']
+  pull_request:
+    paths: ['**/*.md', '**/*.docx', 'verification/check_links.py', 'verification/test_check_links.py', '.github/workflows/check-links.yml']
+  schedule:
+    - cron: '23 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Test link extraction and response classification
+        run: python3 -m unittest discover -s verification -p test_check_links.py
+      - name: Check Markdown and Word links
+        run: python3 verification/check_links.py --report link-report.json
+      - name: Retain detailed results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation-link-report
+          path: link-report.json
+          if-no-files-found: warn
+          retention-days: 30

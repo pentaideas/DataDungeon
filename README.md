@@ -61,7 +61,7 @@ The agreed chapter set is complete: Chapters 1–6 and 10–12, plus the Chapter
 
 Instructor-review drafts. Chapter 2 starter code deliberately refuses growth and leaves removal unfinished. All ten activity projects have tested completion paths within their permitted edit scopes. The original starter checks and new completion checks total 47 tests, passing on Java 11 and Java 21. [Verified run](https://github.com/pentaideas/DataDungeon/actions/runs/39815292642). Word layouts have been reviewed. Original contributions are dedicated under CC0 1.0; third-party material retains its applicable terms.
 
-The chapter format follows the supplied Python Adventure companion by Michael Penta. Textbook: https://opendatastructures.org/ods-java/
+The chapter format follows Michael Penta’s *Companion Materials for OpenStax: Introduction to Python Programming*, Chapter 5 (2025). See [SOURCES.md](SOURCES.md#other-credits) for the supplied reference and its unresolved publication-link and license-provenance record. Textbook: https://opendatastructures.org/ods-java/
 
 This work was AI-created, human-prompted, human-edited, and human-verified. Text, instructional activities, and code were generated using ChatGPT (OpenAI). Decorative artwork was generated using OpenAI image generation. Classroom review remains appropriate.
 
@@ -93,3 +93,14 @@ AI tool citation: OpenAI. (2026). *ChatGPT* [large language model]. https://chat
 ## Adapting these materials
 
 The chapters provide learning activities, implementation constraints, tests, and reflection questions without fixed submission requirements or grading values. Instructor guides retain qualitative criteria for feedback. Instructors may choose their own assessment methods, submission formats, and grading policies; independent learners can use the same activities for self-study.
+
+## Documentation link checks
+
+The **Check documentation links** workflow checks external HTTP(S) URLs in Markdown and Word files on relevant pushes and pull requests, weekly on Mondays, and on manual runs. Word checks include hyperlink relationships and visible URLs in document text, headers, footers, and notes. Run it locally with Python 3:
+
+```sh
+python3 verification/check_links.py --report link-report.json
+```
+
+HTTP 404/410 responses and unreadable source files fail the check. Authentication/access blocks (including 403), rate limits, and network/server failures are reported separately as warnings requiring review; a successful workflow does not mean these links were verified. The downloadable `documentation-link-report` artifact lists each URL, result, and source files. Redirects are followed, but page anchors, relative/local links, and the accuracy of linked content are not checked. A successful HTTP response may still be a sign-in or challenge page.
+
