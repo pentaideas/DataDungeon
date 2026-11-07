@@ -16,38 +16,40 @@ The uploaded publication-review revision is now on `main`. Its [Java 11/21 verif
 
 ## Materials
 
-- `docs/Data_Dungeon_Book_Plan.docx`
+Student documents are in `docs/`. Instructor guides sit beside their reference solutions in `instructor/chapterXX/`; the book plan is in `instructor/`.
+
+- `instructor/Data_Dungeon_Book_Plan.docx`
 - `docs/Data_Dungeon_Chapter_1_At_the_Threshold.docx`
 - `docs/Data_Dungeon_Chapter_2_The_Adventurers_Pack.docx`
 - `docs/Data_Dungeon_Chapter_2_Circular_Queue_Workshop.docx`
-- `docs/Data_Dungeon_Chapter_1_Instructor_Guide.docx`
-- `docs/Data_Dungeon_Chapter_2_Instructor_Guide.docx`
+- `instructor/chapter01/Data_Dungeon_Chapter_1_Instructor_Guide.docx`
+- `instructor/chapter02/Data_Dungeon_Chapter_2_Instructor_Guide.docx`
 - `docs/Data_Dungeon_Chapter_3_The_Shifting_Procession.docx`
-- `docs/Data_Dungeon_Chapter_3_Instructor_Guide.docx`
+- `instructor/chapter03/Data_Dungeon_Chapter_3_Instructor_Guide.docx`
 - `starter/chapter03/` — independent linked procession workshop
 - `instructor/chapter03/` — runnable linked-list reference solution
 - `docs/Data_Dungeon_Chapter_4_The_Ordered_Directory.docx`
-- `docs/Data_Dungeon_Chapter_4_Instructor_Guide.docx`
+- `instructor/chapter04/Data_Dungeon_Chapter_4_Instructor_Guide.docx`
 - `starter/chapter04/` — optional skiplist search and insertion workshop
 - `instructor/chapter04/` — runnable ordered-directory reference solution
 - `docs/Data_Dungeon_Chapter_5_The_Keepers_Registry.docx`
-- `docs/Data_Dungeon_Chapter_5_Instructor_Guide.docx`
+- `instructor/chapter05/Data_Dungeon_Chapter_5_Instructor_Guide.docx`
 - `starter/chapter05/` — chained artifact registry with lookup, registration, and removal
 - `instructor/chapter05/` — runnable solution and small edge-case checker
 - `docs/Data_Dungeon_Chapter_6_The_Archive_of_Doors.docx`
-- `docs/Data_Dungeon_Chapter_6_Instructor_Guide.docx`
+- `instructor/chapter06/Data_Dungeon_Chapter_6_Instructor_Guide.docx`
 - `starter/chapter06/` — binary search tree lookup, insertion, and insertion-order workshop
 - `instructor/chapter06/` — runnable reference solution and diagnosis checker
 - `docs/Data_Dungeon_Chapter_10_The_Awakening_Traps.docx`
-- `docs/Data_Dungeon_Chapter_10_Instructor_Guide.docx`
+- `instructor/chapter10/Data_Dungeon_Chapter_10_Instructor_Guide.docx`
 - `starter/chapter10/` — binary min-heap event scheduler with traps added during play
 - `instructor/chapter10/` — runnable reference solution and compact checker
 - `docs/Data_Dungeon_Chapter_11_The_Treasure_Catalogue.docx`
-- `docs/Data_Dungeon_Chapter_11_Instructor_Guide.docx`
+- `instructor/chapter11/Data_Dungeon_Chapter_11_Instructor_Guide.docx`
 - `starter/chapter11/` — stable insertion sort and merge sort with comparison experiments
 - `instructor/chapter11/` — runnable sorting reference solution
 - `docs/Data_Dungeon_Chapter_12_The_Labyrinth_Revealed.docx`
-- `docs/Data_Dungeon_Chapter_12_Instructor_Guide.docx`
+- `instructor/chapter12/Data_Dungeon_Chapter_12_Instructor_Guide.docx`
 - `starter/chapter12/` — breadth-first search, shortest routes, and traversal visualization
 - `instructor/chapter12/` — runnable BFS reference solution
 - `starter/chapter01/` — navigation foundation

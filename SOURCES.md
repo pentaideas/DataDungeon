@@ -8,7 +8,7 @@ These credits identify the source topics and teaching adaptations; they do not c
 
 Chapters 1–6 and 10–12, plus the Chapter 2 circular-queue workshop, are the complete planned collection. No additional chapters are planned. Numbering follows Morin; it is not a claim to cover every topic in those chapters.
 
-The folders below occur in both `starter/` and `instructor/`. Each is an independent project. Its student chapter and instructor guide in `docs/` cover the same adaptation; the Chapter 2 guide covers both activities.
+The folders below occur in both `starter/` and `instructor/`. Each is an independent project. Its student chapter in `docs/` and instructor guide in the corresponding `instructor/chapterXX/` folder cover the same adaptation; the Chapter 2 guide covers both activities.
 
 | Folder | Morin reading | Teaching adaptation and differences | Main class |
 |---|---|---|---|
